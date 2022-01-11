@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8620902864278810135
+--- !u!1 &3518766487015049030
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8656313020127872670}
-  - component: {fileID: 2538668228357604347}
+  - component: {fileID: 3005684501542522826}
+  - component: {fileID: 825106985943230174}
   m_Layer: 0
-  m_Name: Dungeon
+  m_Name: RoomGenerator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8656313020127872670
+--- !u!4 &3005684501542522826
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8620902864278810135}
+  m_GameObject: {fileID: 3518766487015049030}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -31,16 +31,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2538668228357604347
+--- !u!114 &825106985943230174
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8620902864278810135}
+  m_GameObject: {fileID: 3518766487015049030}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e42f4fc467748849a384fb3dc3a3eee, type: 3}
+  m_Script: {fileID: 11500000, guid: bf5330789fe432645b180fd260b6dce4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RoomGenerator: {fileID: 825106985943230174, guid: 813c2c20a7acf2e4e95764bedfff974d, type: 3}
+  CubePrefabs:
+  - {fileID: 7697052038974795010, guid: 0fc77359d97828747bd7d0c632911a71, type: 3}
+  SpawnAreaPosition: {x: 0, y: 0, z: 0}
+  SpawnAreaWidth: 100
+  SpawnAreaHeight: 100
+  SpawnAreaDepth: 100
+  AmountOfRooms: 100

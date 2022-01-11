@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoomGenerator2D : MonoBehaviour
+public class RoomGenerator2D : BaseRoomGenerator
 {
     private List<GameObject> Rooms = new List<GameObject>();
-   [SerializeField]
+    [SerializeField]
     private List<GameObject> CubePrefabs = null;
     [SerializeField]
     private Vector3 SpawnAreaPosition = Vector3.zero;
@@ -30,7 +30,7 @@ public class RoomGenerator2D : MonoBehaviour
         
     }
 
-    public void GenerateRooms()
+    public override void GenerateRooms()
     {
         for (int i = 0; i < AmountOfRooms; i++)
             SpawnRoom();
@@ -61,5 +61,10 @@ public class RoomGenerator2D : MonoBehaviour
         int tempCubeVersion = Random.Range(0, CubePrefabs.Count);
 
         Rooms.Add(Instantiate(CubePrefabs[tempCubeVersion], tempPosition, tempRotation));
+    }
+
+    public override List<GameObject> GetRooms()
+    {
+        return Rooms;
     }
 }
