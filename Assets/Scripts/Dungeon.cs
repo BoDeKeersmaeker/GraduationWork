@@ -7,6 +7,8 @@ public class Dungeon : MonoBehaviour
 
     [SerializeField]
     BaseRoomGenerator RoomGenerator = null;
+    [SerializeField]
+    BaseAlgorithm Algorithm = null;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,7 +17,11 @@ public class Dungeon : MonoBehaviour
         //if (roomGenerator2D)
         //    roomGenerator2D.GenerateRooms();
 
-        RoomGenerator.GenerateRooms();
+        if(RoomGenerator)
+            RoomGenerator.GenerateRooms();
+
+        if (RoomGenerator && Algorithm)
+            Algorithm.Generate(RoomGenerator.GetRooms());
 
     }
 

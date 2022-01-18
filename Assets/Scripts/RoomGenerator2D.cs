@@ -4,32 +4,28 @@ using UnityEngine;
 
 public class RoomGenerator2D : BaseRoomGenerator
 {
-    private List<GameObject> tempRooms = new List<GameObject>();
     [SerializeField]
     private List<GameObject> CubePrefabs = null;
     [SerializeField]
     private Vector3 SpawnAreaPosition = Vector3.zero;
     [SerializeField]
-    private float GridCellWidth = 10f;
+    private float GridCellWidth = 1f;
     [SerializeField]
-    private float GridCellHeight = 10f;
+    private float GridCellHeight = 1f;
     [SerializeField]
-    private float GridCellDepth = 10f;
-    [SerializeField]
-    private int AmountOfGridCellsWidth = 100;
-    [SerializeField]
-    private int AmountOfGridCellsHeight = 100;
-    [SerializeField]
-    private int AmountOfGridCellsDepth = 100;
+    private float GridCellDepth = 1f;
     [SerializeField]
     private int AmountOfRooms = 100;
 
-    GameObject[,,] Rooms; 
+    private const int AmountOfGridCellsWidth = 100;
+    private const int AmountOfGridCellsHeight = 1;
+    private const int AmountOfGridCellsDepth = 100;
+    GameObject[,,] Rooms = new GameObject[AmountOfGridCellsWidth, AmountOfGridCellsHeight, AmountOfGridCellsDepth]; 
 
     // Start is called before the first frame update
     void Start()
     {
-        Rooms = new GameObject[AmountOfGridCellsWidth, AmountOfGridCellsHeight, AmountOfGridCellsDepth];
+        
     }
 
     // Update is called once per frame
@@ -70,15 +66,10 @@ public class RoomGenerator2D : BaseRoomGenerator
                 break;
         }
 
-        //int tempCubeVersion = Random.Range(0, CubePrefabs.Count);
-        int tempCubeVersion = 0;
+        int tempCubeVersion = Random.Range(0, CubePrefabs.Count);
 
         if (CubePrefabs[tempCubeVersion] != null && CubePrefabs[tempCubeVersion])
-        {
-            GameObject temp = Instantiate(CubePrefabs[tempCubeVersion], tempPosition, tempRotation);
-            tempRooms.Add(temp);
-            //Rooms[tempX, tempY, tempZ] = temp;
-        }
+            Rooms[tempX, tempY, tempZ] = Instantiate(CubePrefabs[tempCubeVersion], tempPosition, tempRotation);
         else
             Debug.LogError("Tried to spawn invalid cube prefab. Instantiate skipped.");
     }
