@@ -21,7 +21,7 @@ public class BaseRoomGenerator : MonoBehaviour
 
     }
 
-    public virtual List<GameObject> GetRooms()
+    public virtual GameObject[,,] GetRooms()
     {
         return null;
     }

@@ -216,30 +216,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1 &711428220 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8620902864278810135, guid: 3b1f1a370ad78bc4fada231d6c6446b7, type: 3}
-  m_PrefabInstance: {fileID: 3647641484951395122}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &711428223
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 711428220}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf5330789fe432645b180fd260b6dce4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CubePrefabs:
-  - {fileID: 7697052038974795010, guid: 0fc77359d97828747bd7d0c632911a71, type: 3}
-  SpawnAreaPosition: {x: 0, y: 0, z: 0}
-  SpawnAreaWidth: 100
-  SpawnAreaHeight: 100
-  SpawnAreaDepth: 100
-  AmountOfRooms: 100
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -323,7 +299,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &3647641484951395122
+--- !u!1001 &1292898461
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -340,15 +316,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8656313020127872670, guid: 3b1f1a370ad78bc4fada231d6c6446b7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -28.487953
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8656313020127872670, guid: 3b1f1a370ad78bc4fada231d6c6446b7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.1631249
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8656313020127872670, guid: 3b1f1a370ad78bc4fada231d6c6446b7, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.322804
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8656313020127872670, guid: 3b1f1a370ad78bc4fada231d6c6446b7, type: 3}
       propertyPath: m_LocalRotation.w

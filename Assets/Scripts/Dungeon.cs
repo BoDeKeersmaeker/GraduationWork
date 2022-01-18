@@ -5,7 +5,8 @@ using UnityEngine;
 public class Dungeon : MonoBehaviour
 {
 
-    [SerializeField] BaseRoomGenerator RoomGenerator = null;
+    [SerializeField]
+    BaseRoomGenerator RoomGenerator = null;
     // Start is called before the first frame update
     void Start()
     {

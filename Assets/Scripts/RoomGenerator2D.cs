@@ -4,24 +4,32 @@ using UnityEngine;
 
 public class RoomGenerator2D : BaseRoomGenerator
 {
-    private List<GameObject> Rooms = new List<GameObject>();
+    private List<GameObject> tempRooms = new List<GameObject>();
     [SerializeField]
     private List<GameObject> CubePrefabs = null;
     [SerializeField]
     private Vector3 SpawnAreaPosition = Vector3.zero;
     [SerializeField]
-    private float SpawnAreaWidth = 100f;
+    private float GridCellWidth = 10f;
     [SerializeField]
-    private float SpawnAreaHeight = 100f;
+    private float GridCellHeight = 10f;
     [SerializeField]
-    private float SpawnAreaDepth = 100f;
+    private float GridCellDepth = 10f;
+    [SerializeField]
+    private int AmountOfGridCellsWidth = 100;
+    [SerializeField]
+    private int AmountOfGridCellsHeight = 100;
+    [SerializeField]
+    private int AmountOfGridCellsDepth = 100;
     [SerializeField]
     private int AmountOfRooms = 100;
+
+    GameObject[,,] Rooms; 
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        Rooms = new GameObject[AmountOfGridCellsWidth, AmountOfGridCellsHeight, AmountOfGridCellsDepth];
     }
 
     // Update is called once per frame
@@ -38,10 +46,14 @@ public class RoomGenerator2D : BaseRoomGenerator
 
     void SpawnRoom()
     {
+        int tempX = Random.Range(0, AmountOfGridCellsWidth);
+        int tempY = Random.Range(0, AmountOfGridCellsHeight);
+        int tempZ = Random.Range(0, AmountOfGridCellsDepth);
+
         Vector3 tempPosition;
-        tempPosition.x = SpawnAreaPosition.x + Random.Range(0f, SpawnAreaWidth + 1f) - SpawnAreaWidth / 2f;
-        tempPosition.y = /*SpawnAreaPosition.y + Random.Range(0f, SpawnAreaHeight + 1f) - SpawnAreaHeight / 2f*/0f;
-        tempPosition.z = SpawnAreaPosition.z + Random.Range(0f, SpawnAreaDepth + 1f) - SpawnAreaDepth / 2f;
+        tempPosition.x = SpawnAreaPosition.x + GridCellWidth * tempX;
+        tempPosition.y = SpawnAreaPosition.y + GridCellHeight * tempY;
+        tempPosition.z = SpawnAreaPosition.z + GridCellDepth * tempZ;
 
         Quaternion tempRotation = transform.rotation;
         int tempRotationOffsetIndex = Random.Range(0, 4);
@@ -58,12 +70,20 @@ public class RoomGenerator2D : BaseRoomGenerator
                 break;
         }
 
-        int tempCubeVersion = Random.Range(0, CubePrefabs.Count);
+        //int tempCubeVersion = Random.Range(0, CubePrefabs.Count);
+        int tempCubeVersion = 0;
 
-        Rooms.Add(Instantiate(CubePrefabs[tempCubeVersion], tempPosition, tempRotation));
+        if (CubePrefabs[tempCubeVersion] != null && CubePrefabs[tempCubeVersion])
+        {
+            GameObject temp = Instantiate(CubePrefabs[tempCubeVersion], tempPosition, tempRotation);
+            tempRooms.Add(temp);
+            //Rooms[tempX, tempY, tempZ] = temp;
+        }
+        else
+            Debug.LogError("Tried to spawn invalid cube prefab. Instantiate skipped.");
     }
 
-    public override List<GameObject> GetRooms()
+    public override GameObject[,,] GetRooms()
     {
         return Rooms;
     }
