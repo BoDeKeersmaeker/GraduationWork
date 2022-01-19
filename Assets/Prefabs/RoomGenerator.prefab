@@ -45,9 +45,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CubePrefabs:
   - {fileID: 7697052038974795010, guid: 0fc77359d97828747bd7d0c632911a71, type: 3}
-  - {fileID: 8595571731282025980, guid: abe8fc0c03195884da4e86f389605fe8, type: 3}
-  - {fileID: 880430633858793369, guid: 30f0a587420916b4db74153dac0499f8, type: 3}
-  - {fileID: 4345561785985541350, guid: 7c05752f75983364a92e830769e00ccd, type: 3}
   SpawnAreaPosition: {x: 0, y: 0, z: 0}
   GridCellWidth: 1
   GridCellHeight: 1
