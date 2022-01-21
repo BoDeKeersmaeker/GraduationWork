@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -100,9 +101,9 @@ public class Delaunay2D : BaseAlgorithm
         }
     }
 
-    private List<Vector3> Vertices = null;
-    private List<Triangle> Triangles = null;
-    private List<Line> Lines = null;
+    private List<Vector3> Vertices = new List<Vector3>();
+    private List<Triangle> Triangles = new List<Triangle>();
+    private List<Line> Lines = new List<Line>();
     private Triangle SuperTriangle = null;
 
     // Start is called before the first frame update
@@ -121,13 +122,15 @@ public class Delaunay2D : BaseAlgorithm
     {
         initializeVertices(rooms);
         CalculateSuperTriangle();
-        AddPointToTriangulation();
+        GenerateTriangles();
+        GenerateLines();
     }
 
-    public void initializeVertices(GameObject[,,] rooms)
+    private void initializeVertices(GameObject[,,] rooms)
     {
-        foreach(GameObject ro in rooms)
-            Vertices.Add(ro.transform.position);
+        foreach(GameObject room in rooms)
+            if(room)
+                Vertices.Add(room.transform.position);
     }
     
     //rework later
@@ -161,45 +164,50 @@ public class Delaunay2D : BaseAlgorithm
         Triangles.Add(new Triangle(VertorX, VertorY, VertorZ));
     }
 
-    private void AddPointToTriangulation()
+    private void GenerateTriangles()
     {
         foreach (Vector3 vertex in Vertices)
+            AddPointToTriangulation(vertex);
+        Triangles.RemoveAll((Triangle triangle) => triangle.SharesVector(SuperTriangle));
+    }    
+
+    private void AddPointToTriangulation(Vector3 vertex)
+    {
+        List<Line> line = new List<Line>();
+
+        foreach (Triangle triangle in Triangles)
         {
-            List<Line> line = new List<Line>();
-
-            foreach (Triangle triangle in Triangles)
+            if (triangle.IsPointInCircumCircle(vertex))
             {
-                if (triangle.IsPointInCircumCircle(vertex))
-                {
-                    triangle.IsValid = false;
-                    line.Add(new Line(triangle.GetVectorX(), triangle.GetVectorY()));
-                    line.Add(new Line(triangle.GetVectorY(), triangle.GetVectorZ()));
-                    line.Add(new Line(triangle.GetVectorZ(), triangle.GetVectorX()));
-                }
-            }
-
-            Triangles.RemoveAll((Triangle t) => !t.IsValid);
-
-            for (int i = 0; i < line.Count; i++)
-            {
-                for (int j = i + 1; j < line.Count; j++)
-                {
-                    if (line[i].Equals(line[j]))
-                    {
-                        line[i].IsValid = false;
-                        line[j].IsValid = false;
-                    }
-                }
-            }
-
-            line.RemoveAll((Line e) => e.IsValid);
-
-            foreach (Line temp in line)
-                Triangles.Add(new Triangle(temp.GetVectorA(), temp.GetVectorB(), vertex));
+                triangle.IsValid = false;
+                line.Add(new Line(triangle.GetVectorX(), triangle.GetVectorY()));
+                line.Add(new Line(triangle.GetVectorY(), triangle.GetVectorZ()));
+                line.Add(new Line(triangle.GetVectorZ(), triangle.GetVectorX()));
+             }
         }
 
-        Triangles.RemoveAll((Triangle triangle) => triangle.SharesVector(SuperTriangle));
+        Triangles.RemoveAll((Triangle triangle) => !triangle.IsValid);
 
+        for (int i = 0; i < line.Count; i++)
+        {
+            for (int j = i + 1; j < line.Count; j++)
+            {
+                if (line[i].Equals(line[j]))
+                {
+                    line[i].IsValid = false;
+                    line[j].IsValid = false;
+                }
+            }
+        }
+
+        line.RemoveAll((Line e) => e.IsValid);
+
+        foreach (Line temp in line)
+            Triangles.Add(new Triangle(temp.GetVectorA(), temp.GetVectorB(), vertex));
+    }
+
+    private void GenerateLines()
+    {
         HashSet<Line> lines = new HashSet<Line>();
 
         foreach (Triangle triangle in Triangles)

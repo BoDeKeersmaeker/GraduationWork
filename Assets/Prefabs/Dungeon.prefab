@@ -44,4 +44,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RoomGenerator: {fileID: 2975966077477829695, guid: 813c2c20a7acf2e4e95764bedfff974d, type: 3}
-  Algorithm: {fileID: 2934733242208788047, guid: cdbcac31b84b6624dbc6df3aca01bced, type: 3}
+  Algorithm: {fileID: 5152302994592911870, guid: cdbcac31b84b6624dbc6df3aca01bced, type: 3}

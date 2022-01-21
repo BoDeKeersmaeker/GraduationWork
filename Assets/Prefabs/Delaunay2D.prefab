@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4387784455419155489}
-  - component: {fileID: 2934733242208788047}
+  - component: {fileID: 5152302994592911870}
   m_Layer: 0
   m_Name: Delaunay2D
   m_TagString: Untagged
@@ -31,7 +31,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2934733242208788047
+--- !u!114 &5152302994592911870
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -40,6 +40,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 4959167614691865358}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2ea9ee87d778b24b9e85d7d98cb7dc3, type: 3}
+  m_Script: {fileID: 11500000, guid: acda3b93330339447b9b33f0566452fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
