@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Random = System.Random;
 public class Delaunay2D : BaseAlgorithm
 {
     public class Triangle
@@ -10,13 +10,14 @@ public class Delaunay2D : BaseAlgorithm
         private Vector2 VertorX;
         private Vector2 VertorY;
         private Vector2 VertorZ;
-        public bool IsValid {get; set;}
+        public bool IsValid { get; set; }
 
         public Triangle(Vector2 vertorX, Vector2 vertorY, Vector2 vertorZ)
         {
             VertorX = vertorX;
             VertorY = vertorY;
             VertorZ = vertorZ;
+            IsValid = true;
         }
         public Vector2 GetVectorX()
         {
@@ -70,7 +71,6 @@ public class Delaunay2D : BaseAlgorithm
             return dist <= circumRadius;
         }
     }
-
     public class Line
     {
         private Vector2 VertorA;
@@ -81,6 +81,7 @@ public class Delaunay2D : BaseAlgorithm
         {
             VertorA = vertorA;
             VertorB = vertorB;
+            IsValid = true;
         }
         public Vector2 GetVectorA()
         {
@@ -90,21 +91,36 @@ public class Delaunay2D : BaseAlgorithm
         {
             return VertorB;
         }
-        public bool Equals(Line Line)
+        public bool AlmostEqual(Line Line)
         {
-            if (VertorA == Line.GetVectorA() && VertorB == Line.GetVectorB())
-                return true;
-            if (VertorA == Line.GetVectorB() && VertorB == Line.GetVectorA())
-                return true;
+            //if (VertorA == Line.GetVectorA() && VertorB == Line.GetVectorB())
+            //    return true;
+            //if (VertorA == Line.GetVectorB() && VertorB == Line.GetVectorA())
+            //    return true;
 
+            //return false;
+
+            if (AlmostEqual(VertorA, Line.GetVectorA()) && AlmostEqual(VertorB, Line.GetVectorB()))
+                return true;
+            if (AlmostEqual(VertorA, Line.GetVectorB()) && AlmostEqual(VertorB, Line.GetVectorA()))
+                return true;
             return false;
+        }
+        public bool AlmostEqual(Vector2 left, Vector2 right)
+        {
+            return AlmostEqual(left.x, right.x) && AlmostEqual(left.y, right.y);
+        }
+        public bool AlmostEqual(float x, float y)
+        {
+            return Mathf.Abs(x - y) <= float.Epsilon * Mathf.Abs(x + y) * 2
+            || Mathf.Abs(x - y) < float.MinValue;
         }
     }
 
     private List<Vector3> Vertices = new List<Vector3>();
     private List<Triangle> Triangles = new List<Triangle>();
     private List<Line> Lines = new List<Line>();
-    private Triangle SuperTriangle = null;
+    //private Triangle SuperTriangle = null;
 
     // Start is called before the first frame update
     void Start()
@@ -115,27 +131,42 @@ public class Delaunay2D : BaseAlgorithm
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public override void Generate(GameObject[,,] rooms)
     {
+        print("Starting delaunay triangulation");
+
         initializeVertices(rooms);
         CalculateSuperTriangle();
         GenerateTriangles();
         GenerateLines();
+
+        print("Delaunay triangulation completed");
     }
 
     private void initializeVertices(GameObject[,,] rooms)
     {
-        foreach(GameObject room in rooms)
-            if(room)
-                Vertices.Add(room.transform.position);
+        print("Start adding vertices");
+
+        foreach (GameObject room in rooms)
+        {
+            if (room)
+            {
+                Vector3 temp = room.transform.position;
+                Vertices.Add(temp);
+                print("Vertex added");
+            }
+        }
+
+        print("Finished adding vertices");
     }
     
-    //rework later
     private void CalculateSuperTriangle()
     {
+        print("Starting SuperTriangle creation");
+
         float minX = Vertices[0].x;
         float minY = Vertices[0].z;
         float maxX = minX;
@@ -143,13 +174,13 @@ public class Delaunay2D : BaseAlgorithm
 
         foreach (var vertex in Vertices)
         {
-            if (vertex.x < minX) 
+            if (vertex.x < minX)
                 minX = vertex.x;
-            if (vertex.x > maxX) 
+            if (vertex.x > maxX)
                 maxX = vertex.x;
-            if (vertex.y < minY) 
+            if (vertex.y < minY)
                 minY = vertex.y;
-            if (vertex.y > maxY) 
+            if (vertex.y > maxY)
                 maxY = vertex.y;
         }
 
@@ -157,72 +188,125 @@ public class Delaunay2D : BaseAlgorithm
         float dy = maxY - minY;
         float deltaMax = Mathf.Max(dx, dy) * 2;
 
-        Vector2 VertorX = new Vector2( minX - 1, minY - 1);
+        Vector2 VertorX = new Vector2(minX - 1, minY - 1);
         Vector2 VertorY = new Vector2(minX - 1, maxY + deltaMax);
         Vector2 VertorZ = new Vector2(maxX + deltaMax, minY - 1);
 
         Triangles.Add(new Triangle(VertorX, VertorY, VertorZ));
+        //SuperTriangle = new Triangle(VertorX, VertorY, VertorZ);
+
+        print("SuperTriangle created");
     }
 
     private void GenerateTriangles()
     {
+        print("Start generation of triangles");
+
         foreach (Vector3 vertex in Vertices)
             AddPointToTriangulation(vertex);
-        Triangles.RemoveAll((Triangle triangle) => triangle.SharesVector(SuperTriangle));
+        Triangles.RemoveAll((Triangle triangle) => triangle.SharesVector(Triangles[0]));
+
+        print("Completed triangle generation");
     }    
 
     private void AddPointToTriangulation(Vector3 vertex)
     {
-        List<Line> line = new List<Line>();
+        print("Adding point to triangulation");
+
+        List<Line> lines = new List<Line>();
 
         foreach (Triangle triangle in Triangles)
         {
             if (triangle.IsPointInCircumCircle(vertex))
             {
                 triangle.IsValid = false;
-                line.Add(new Line(triangle.GetVectorX(), triangle.GetVectorY()));
-                line.Add(new Line(triangle.GetVectorY(), triangle.GetVectorZ()));
-                line.Add(new Line(triangle.GetVectorZ(), triangle.GetVectorX()));
-             }
+                lines.Add(new Line(triangle.GetVectorX(), triangle.GetVectorY()));
+                lines.Add(new Line(triangle.GetVectorY(), triangle.GetVectorZ()));
+                lines.Add(new Line(triangle.GetVectorZ(), triangle.GetVectorX()));
+                print("Triangle removed");
+            }
         }
 
         Triangles.RemoveAll((Triangle triangle) => !triangle.IsValid);
 
-        for (int i = 0; i < line.Count; i++)
+        for (int i = 0; i < lines.Count; i++)
         {
-            for (int j = i + 1; j < line.Count; j++)
+            for (int j = i + 1; j < lines.Count; j++)
             {
-                if (line[i].Equals(line[j]))
+                if (lines[i].AlmostEqual(lines[j]))
                 {
-                    line[i].IsValid = false;
-                    line[j].IsValid = false;
+                    lines[i].IsValid = false;
+                    lines[j].IsValid = false;
+                    print("2 lines removed");
                 }
             }
         }
 
-        line.RemoveAll((Line e) => e.IsValid);
+        lines.RemoveAll((Line line) => !line.IsValid);
 
-        foreach (Line temp in line)
-            Triangles.Add(new Triangle(temp.GetVectorA(), temp.GetVectorB(), vertex));
+        foreach (Line line in lines)
+        {
+            Triangles.Add(new Triangle(line.GetVectorA(), line.GetVectorB(), new Vector2(vertex.x, vertex.z)));
+            print("Triangle added");
+        }
     }
 
     private void GenerateLines()
     {
+        print("Start generation of lines");
+
         HashSet<Line> lines = new HashSet<Line>();
 
         foreach (Triangle triangle in Triangles)
         {
             Line line = new Line(triangle.GetVectorX(), triangle.GetVectorY());
             if (lines.Add(line))
+            {
                 Lines.Add(line);
+                print("Line added");
+            }
 
             line = new Line(triangle.GetVectorY(), triangle.GetVectorZ());
             if (lines.Add(line))
+            {
                 Lines.Add(line);
+                print("Line added");
+            }
 
             line = new Line(triangle.GetVectorZ(), triangle.GetVectorX());
             if (lines.Add(line))
+            {
                 Lines.Add(line);
+                print("Line added");
+            }
         }
+
+        print("Completed line generation");
+    }
+
+    public override void TempDebug()
+    {
+        //debug
+        foreach (Line line in Lines)
+        {
+            print("Vector A: " + line.GetVectorA() + "Vector B: " + line.GetVectorB());
+            //Debug.DrawLine(new Vector3(line.GetVectorA().x, line.GetVectorA().y, 0f), new Vector3(line.GetVectorB().x, line.GetVectorB().y, 0f), new Color(1f, 1f, 1f, 1f), 1000f);
+            DrawLine(new Vector3(line.GetVectorA().x, 0f, line.GetVectorA().y), new Vector3(line.GetVectorB().x, 0f, line.GetVectorB().y), new Color(1f, 1f, 1f, 1f), 1000f);
+        
+        }
+    }
+
+    private void DrawLine(Vector3 start, Vector3 end, Color color, float duration = 0.2f)
+    {
+        GameObject myLine = new GameObject();
+        myLine.transform.position = start;
+        myLine.AddComponent<LineRenderer>();
+        LineRenderer lr = myLine.GetComponent<LineRenderer>();
+        //lr.material = new Material(Shader.Find("Particles/Alpha Blended Premultiply"));
+        lr.SetColors(color, color);
+        lr.SetWidth(0.1f, 0.1f);
+        lr.SetPosition(0, start);
+        lr.SetPosition(1, end);
+        GameObject.Destroy(myLine, duration);
     }
 }

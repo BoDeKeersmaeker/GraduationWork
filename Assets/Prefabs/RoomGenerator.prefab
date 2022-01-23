@@ -49,4 +49,4 @@ MonoBehaviour:
   GridCellWidth: 1
   GridCellHeight: 1
   GridCellDepth: 1
-  AmountOfRooms: 100
+  AmountOfRooms: 10

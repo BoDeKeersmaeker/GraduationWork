@@ -20,4 +20,9 @@ public class BaseAlgorithm : MonoBehaviour
     {
         
     }
+
+    public virtual void TempDebug()
+    {
+
+    }
 }

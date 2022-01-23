@@ -23,6 +23,7 @@ public class Dungeon : MonoBehaviour
         if (RoomGenerator && Algorithm)
             Algorithm.Generate(RoomGenerator.GetRooms());
 
+        Algorithm.TempDebug();
     }
 
     // Update is called once per frame
